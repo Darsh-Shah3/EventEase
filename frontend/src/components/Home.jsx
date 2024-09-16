@@ -4,13 +4,13 @@ import AllEvents from "./AllEvents";
 import Footer from "./Footer";
 import Testimonials from "./Testimonials";
 
-const Home = () => {
+const Home = ({ isloggedin, isuser }) => {
     return (
         <>
-            <Navbar />
+            <Navbar isloggedin={isloggedin} />
             <div className="max-w-7xl mx-auto pt-20 px-6">
                 <HeroSection />
-                <AllEvents />
+                <AllEvents isloggedin={isloggedin} isuser={isuser} />
                 <Testimonials />
                 <Footer />
             </div>

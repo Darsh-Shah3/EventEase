@@ -4,13 +4,13 @@ import logo from "../assets/logo.jpg";
 import { navItems } from "../constants";
 
 
-const Navbar = () => {
+const Navbar = ({ isloggedin }) => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
-
+  console.log(isloggedin)
   return (
     <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80">
       <div className="container px-4 mx-auto relative lg:text-sm">
@@ -37,13 +37,14 @@ const Navbar = () => {
               href="/login"
               className="py-2 px-3 border rounded-md transition-colors duration-300 hover:bg-gray-100 border-gray-700"
             >
-              Login
+              {isloggedin ? "Logout" : "Login"}
+
             </a>
             <a
               href="/signup"
               className="bg-purple-400 py-2 px-3 rounded-md transition-colors duration-300 hover:bg-purple-500 border border-black"
             >
-              Create an account
+              {isloggedin ? "Account exists" : "Create an account"}
             </a>
           </div>
 

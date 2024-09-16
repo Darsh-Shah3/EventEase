@@ -4,6 +4,8 @@ import codeImg from "../assets/code.jpg";
 import e1 from "../assets/img/e1.avif";
 import e2 from "../assets/img/e2.avif";
 import e3 from "../assets/img/e3.jpg";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+
 
 const Card = ({ date, time, title, category, price, image }) => {
   return (
@@ -12,18 +14,29 @@ const Card = ({ date, time, title, category, price, image }) => {
         <div className="w-full h-1/2">
           <img src={image} alt="Event" className="w-full h-full object-cover" />
         </div>
-        <div className="p-4 h-1/2 flex flex-col justify-between">
+        <div className="p-4 flex flex-col justify-between h-auto">
           <div>
-            <div className="flex space-x-4 mb-4">
-              <span className="bg-green-100 text-green-500 py-1 px-3 rounded-full text-sm">{price}</span>
-              <span className="bg-gray-100 text-gray-500 py-1 px-3 rounded-full text-sm">{category}</span>
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex space-x-4">
+                <span className="bg-green-100 text-green-500 py-1 px-3 rounded-full text-sm">{price}</span>
+                <span className="bg-gray-100 text-gray-500 py-1 px-3 rounded-full text-sm">{category}</span>
+              </div>
+              <div className="flex space-x-2">
+                <button className="bg-blue-500 text-white p-1 rounded-lg hover:bg-blue-600 transition-all">
+                  <PencilIcon className="h-5 w-5" />
+                </button>
+                <button className="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600 transition-all">
+                  <TrashIcon className="h-5 w-5" />
+                </button>
+              </div>
             </div>
-            <div className="text-gray-600 mb-2">
-              <p><strong>Date:</strong> {date}</p>
-              <p><strong>Time:</strong> {time}</p>
-            </div>
+
           </div>
           <h3 className="text-xl font-bold mb-2">{title}</h3>
+          <div className="text-gray-600 mb-2">
+            <p><strong>Date:</strong> {date}</p>
+            <p><strong>Time:</strong> {time}</p>
+          </div>
         </div>
       </div>
     </a>

@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { CalendarIcon, MapPinIcon, CurrencyDollarIcon, LinkIcon, PencilIcon, PhotoIcon, TagIcon } from "@heroicons/react/24/outline";
 
-const CreateEvent = () => {
+const CreateEvent = ({ isloggedin, isuser }) => {
     const [isFree, setIsFree] = useState(false);
 
     const handleFreeCheckbox = () => {
