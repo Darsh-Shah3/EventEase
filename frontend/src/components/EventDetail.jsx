@@ -27,7 +27,7 @@ const EventDetail = () => {
   const navigate = useNavigate(); // Hook for programmatic navigation
 
   const event = eventData[id]; // Get event details based on ID
-
+ 
   const handleRegisterClick = () => {
     navigate("/registerEvent"); // Redirect to register event page
   };

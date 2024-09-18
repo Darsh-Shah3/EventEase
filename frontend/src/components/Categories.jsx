@@ -69,7 +69,7 @@ const Categories = () => {
 
     return (
         <>
-            {/* Navbar Component */}
+            {/* Navbar Component */} 
             <Navbar />
 
             <div className="mt-20 px-6">

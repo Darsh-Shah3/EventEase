@@ -6,9 +6,9 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen bg-white-100">
       <Navbar />
-      <div className="mt-20 px-6">
+      <div className="max-w-7xl mx-auto pt-20 px-6">
         {/* About Us heading */}
-        <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center mt-20 mb-10 tracking-wide">
+        <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center mt-10 mb-10 tracking-wide">
           <span className="bg-gradient-to-r from-purple-500 to-purple-800 text-transparent bg-clip-text">
             About Us
           </span>
