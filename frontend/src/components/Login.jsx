@@ -1,12 +1,45 @@
 import React, { useState } from "react";
 
-const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+const Login = ({ login, user }) => {
+    const { isLoggedIn, setIsLoggedIn } = login;
+    const { currentUser, setCurrentUser } = user;
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
 
-    const handleLogin = (e) => {
+    const onFieldChange = (target, value) =>
+        setFormData({ ...formData, [target.name]: value })
+
+    const handleLogin = async (e) => {
         e.preventDefault();
-        console.log("Logging in with:", { email, password });
+
+        if (Object.values(formData).includes('')) {
+            setFlash({ message: 'Fields cannot be empty', type: 'error' });
+            return;
+        }
+
+
+        try {
+            const response = await fetch(`http://localhost:5000/user/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            setIsLoggedIn(true);
+            setCurrentUser(JSON.parse(result)['user'])
+            setFlash({ message: 'Event updation successful!', type: 'success' });
+            setTimeout(() => navigate('/'), 1200);
+        } catch (error) {
+            console.error('Error:', error);
+            setFlash({ message: 'Something went wrong', type: 'error' });
+        }
     };
 
     return (
@@ -22,10 +55,10 @@ const Login = () => {
                         <input
                             type="email"
                             id="email"
+                            name="email"
                             className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => onFieldChange(e.target, e.target.value)}
                             required
                         />
                     </div>
@@ -37,10 +70,10 @@ const Login = () => {
                         <input
                             type="password"
                             id="password"
+                            name='password'
                             className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => onFieldChange(e.target, e.target.value)}
                             required
                         />
                     </div>

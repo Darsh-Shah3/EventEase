@@ -1,29 +1,24 @@
+import { CurrencyDollarIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, LinkIcon, MapPinIcon, PencilIcon, TagIcon } from "lucide-react";
 import React, { useState } from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import { CalendarIcon, MapPinIcon, CurrencyDollarIcon, LinkIcon, PencilIcon, PhotoIcon, TagIcon } from "@heroicons/react/24/outline";
+import { useLocation, useNavigate } from "react-router-dom";
 import FlashMessage from "../constants/FlashMessage";
-import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
+import Navbar from "./Navbar";
 
-const CreateEvent = ({ isloggedin, isuser }) => {
-    const [isFree, setIsFree] = useState(false);
-    const [flash, setFlash] = useState({ message: '', type: '' })
+const UpdateEvent = () => {
+    const loc = useLocation();
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        title: "",
-        type: "",
-        description: "",
-        image: "",
-        location: "",
-        startDate: "",
-        endDate: "",
-        price: "",
-        url: ""
-    });
 
-    const handleFreeCheckbox = () => {
-        setIsFree(!isFree);
-    };
+    // Check if details are available
+    const details = loc.state || {};
+
+    // Destructure with fallback
+    const { title = '', type = '', description = '', image = '', location = '', startDate = '', endDate = '', price = 'Free', url = '' } = details;
+    const initialData = { ...details };
+    const [isFree, setIsFree] = useState(price === 'Free');
+    const [formData, setFormData] = useState({ ...details });
+    const [flash, setFlash] = useState({ message: '', type: '' });
 
     // Handle input changes including file input
     const onFormChange = (target, value) => {
@@ -38,50 +33,59 @@ const CreateEvent = ({ isloggedin, isuser }) => {
             }
         } else {
             setFormData({ ...formData, [target.name]: value });
+            console.log(target);
+            
+            
         }
         console.log(formData);
+        
     };
 
-    const handleSubmit = async (e) => {
+    const handleFreeCheckbox = () => {
+        setIsFree(!isFree);
+        setFormData({ ...formData, price: isFree ? 'Paid' : 'Free' });
+    };
+
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
 
-        // If isFree is checked, set price to 'Free'
-        const finalData = {
-            ...formData,
-            price: isFree ? "Free" : formData.price,
-        };
+        if (JSON.stringify(initialData) === JSON.stringify(formData)) {
+            setFlash({ message: 'Nothing is updated as nothing is changed', type: 'success' })
+            setTimeout(() => navigate('/'), 1200);
+        } else {
 
-        console.log(finalData['title'], finalData['url']);
+            const hasEmptyValues = Object.entries(formData).some(
+                ([key, value]) => {
+                    key !== 'image' && (!value || value === ""); console.log(key, value);
+                }
+            );
 
-        if (Object.values(finalData).includes('')) {
-            setFlash({ message: 'Fields cannot be empty', type: 'error' });
-            return;
-        }
-
-        try {
-            const response = await fetch('http://localhost:5000/events', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(finalData), // JSON encoded data
-            });
-
-            const result = await response.json();
-            if (!response.ok) {
-                setFlash({ message: 'Something went wrong', type: 'error' });
+            if (hasEmptyValues) {
+                setFlash({ message: 'Fields cannot be empty', type: 'error' });
                 return;
             }
-            setFlash({ message: 'Event creation successful!', type: 'success' });
-            setTimeout(() => {
-                navigate('/')
-            }, 1200);
-        } catch (error) {
-            console.error('Error:', error);
-            setFlash({ message: 'Something went wrong', type: 'error' });
-        }
-    };
 
+            try {
+                const response = await fetch(`http://localhost:5000/events/update/${details._id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                setFlash({ message: 'Event updation successful!', type: 'success' });
+                setTimeout(() => navigate('/'), 1200);
+            } catch (error) {
+                console.error('Error:', error);
+                setFlash({ message: 'Something went wrong', type: 'error' });
+            }
+        }
+
+    };
 
     return (
         <>
@@ -93,31 +97,28 @@ const CreateEvent = ({ isloggedin, isuser }) => {
             />)}
             <div className="max-w-7xl mx-auto pt-3 px-6">
                 <div className="min-h-screen bg-gray-100 p-8">
-                    <h2 className="text-3xl font-bold text-center mb-8">Create Event</h2>
+                    <h2 className="text-3xl font-bold text-center mb-8">Update Event</h2>
 
-                    <form className="max-w-5xl mx-auto" onSubmit={handleSubmit}>
+                    <form className="max-w-5xl mx-auto" onSubmit={handleFormSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div className="relative">
                                 <PencilIcon className="w-6 h-6 absolute left-3 top-3 text-gray-400" />
                                 <input
                                     type="text"
                                     name="title"
-                                    placeholder="Event Name"
                                     className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                    value={formData.title}
+                                    placeholder ={title}
                                     onChange={(e) => onFormChange(e.target, e.target.value)}
                                 />
                             </div>
-
                             <div className="relative">
                                 <TagIcon className="w-6 h-6 absolute left-3 top-3 text-gray-400" />
                                 <select
-                                    name="type"
                                     className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                    value={formData.type}
+                                    placeholder={type}
                                     onChange={(e) => onFormChange(e.target, e.target.value)}
                                 >
-                                    <option value="" disabled hidden>
+                                    <option disabled hidden>
                                         Category
                                     </option>
                                     <option value="Conference">Conference</option>
@@ -132,19 +133,17 @@ const CreateEvent = ({ isloggedin, isuser }) => {
                                 <PencilIcon className="w-6 h-6 absolute left-3 top-3 text-gray-400" />
                                 <textarea
                                     name="description"
-                                    placeholder="Description"
                                     className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 h-36"
-                                    value={formData.description}
+                                    placeholder={description}
                                     onChange={(e) => onFormChange(e.target, e.target.value)}
                                 />
                             </div>
-
                             <div className="relative">
                                 <PhotoIcon className="w-6 h-6 absolute left-3 top-3 text-gray-400" />
                                 <input
                                     type="file"
                                     className="w-full h-36 pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                    onChange={(e) => onFormChange(e.target, e.target.files[0])}
+                                    onChange={(e) => onFormChange(e.target, e.target.value)}
                                 />
                             </div>
                         </div>
@@ -155,9 +154,8 @@ const CreateEvent = ({ isloggedin, isuser }) => {
                             <input
                                 type="text"
                                 name="location"
-                                placeholder="Event Location or Online"
                                 className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                value={formData.location}
+                                placeholder={location}
                                 onChange={(e) => onFormChange(e.target, e.target.value)}
                             />
                         </div>
@@ -170,7 +168,7 @@ const CreateEvent = ({ isloggedin, isuser }) => {
                                     type="date"
                                     name="startDate"
                                     className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                    value={formData.startDate}
+                                    placeholder={new Date(startDate).toISOString().split('T')[0]}
                                     onChange={(e) => onFormChange(e.target, e.target.value)}
                                 />
                             </div>
@@ -180,7 +178,7 @@ const CreateEvent = ({ isloggedin, isuser }) => {
                                     type="date"
                                     name="endDate"
                                     className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                    value={formData.endDate}
+                                    placeholder={new Date(endDate).toISOString().split('T')[0]}
                                     onChange={(e) => onFormChange(e.target, e.target.value)}
                                 />
                             </div>
@@ -191,20 +189,19 @@ const CreateEvent = ({ isloggedin, isuser }) => {
                             <div className="relative">
                                 <CurrencyDollarIcon className="w-6 h-6 absolute left-3 top-3 text-gray-400" />
                                 <input
-                                    type={isFree ? "text" : "number"}
+                                    type='text'
                                     name="price"
-                                    placeholder={isFree ? "Free" : "Price"}
+                                    placeholder={price}
                                     className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                    value={formData.price}
-                                    onChange={(e) => onFormChange(e.target, e.target.value)}
                                     disabled={isFree}
+                                    onChange={(e) => onFormChange(e.target, e.target.value)}
                                 />
                                 <label className="flex ml-2 items-center mt-2">
                                     <input
                                         type="checkbox"
                                         className="form-checkbox text-purple-500"
                                         checked={isFree}
-                                        onChange={handleFreeCheckbox}
+                                        onChange={(event) => handleFreeCheckbox(event.target.value)}
                                     />
                                     <span className="ml-2 text-gray-700">Free Ticket</span>
                                 </label>
@@ -215,9 +212,8 @@ const CreateEvent = ({ isloggedin, isuser }) => {
                                 <input
                                     type="url"
                                     name="url"
-                                    placeholder="Event URL"
                                     className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                    value={formData.url}
+                                    placeholder={url}
                                     onChange={(e) => onFormChange(e.target, e.target.value)}
                                 />
                             </div>
@@ -227,16 +223,16 @@ const CreateEvent = ({ isloggedin, isuser }) => {
                         <button
                             type="submit"
                             className="w-full bg-purple-400 text-white border border-black py-3 px-6 rounded-lg hover:bg-purple-500"
+
                         >
-                            Create Event
+                            Update Event
                         </button>
                     </form>
                 </div>
-
                 <Footer />
             </div>
         </>
     );
 };
 
-export default CreateEvent;
+export default UpdateEvent;

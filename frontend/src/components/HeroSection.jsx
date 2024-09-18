@@ -16,7 +16,7 @@ const HeroSection = () => {
       </p>
       <div className="flex justify-center my-10">
         <a
-          href="/"
+          href="/categories"
           className="bg-gradient-to-r from-purple-300 to-purple-500 border border-black py-3 px-4 mx-3 rounded-md"
         >
           Explore Now

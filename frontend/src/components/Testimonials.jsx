@@ -37,7 +37,6 @@
 
 
 
-// added keyframes
 import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components"; // it is downloaded
 import { testimonials } from "../constants"; // Ensure this path is correct
@@ -73,25 +72,27 @@ const Testimonials = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible(true);
-            observer.unobserve(entry.target);
+            observer.unobserve(entry.target); // Stop observing after it becomes visible
           }
         });
       },
       { threshold: 0.1 }
     );
 
-    if (testimonialsRef.current) {
-      testimonialsRef.current.forEach((element) => {
+    testimonialsRef.current.forEach((element) => {
+      if (element) {
+        // Only observe if the element exists
         observer.observe(element);
-      });
-    }
+      }
+    });
 
     return () => {
-      if (testimonialsRef.current) {
-        testimonialsRef.current.forEach((element) => {
+      testimonialsRef.current.forEach((element) => {
+        if (element) {
+          // Only unobserve if the element exists
           observer.unobserve(element);
-        });
-      }
+        }
+      });
     };
   }, []);
 
@@ -105,9 +106,8 @@ const Testimonials = () => {
           <div
             key={index}
             ref={(el) => (testimonialsRef.current[index] = el)}
-            className={`w-full sm:w-1/2 lg:w-1/3 px-4 py-2 transition-transform ${
-              isVisible ? "animate-slide-in" : ""
-            }`}
+            className={`w-full sm:w-1/2 lg:w-1/3 px-4 py-2 transition-transform ${isVisible ? "animate-slide-in" : ""
+              }`}
           >
             {isVisible ? (
               <AnimatedDiv className="bg-neutral-100 rounded-md p-6 text-md border border-neutral-800 font-thin">
