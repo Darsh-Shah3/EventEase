@@ -4,13 +4,16 @@ import logo from "../assets/logo.png";
 import { navItems } from "../constants";
 
 
-const Navbar = () => {
+const Navbar = ({ login, user }) => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const { isLoggedIn } = login;
+  const { currentUser } = user;
+  console.log(currentUser, ' is ', isLoggedIn);
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
- 
+
   return (
     <nav className="sticky top-0 z-50 py-3 backdrop-blur-lg border-b border-neutral-700/80">
       <div className="container px-4 mx-auto relative lg:text-sm">
@@ -33,18 +36,26 @@ const Navbar = () => {
           </ul>
 
           <div className="hidden lg:flex justify-center space-x-7 items-center">
-            <a
-              href="/login"
-              className="py-2 px-3 border rounded-md transition-colors duration-300 hover:bg-gray-100 border-gray-700"
-            >
-              Login
-            </a>
-            <a
-              href="/signup"
-              className="bg-purple-400 py-2 px-3 rounded-md transition-colors duration-300 hover:bg-purple-500 border border-black"
-            >
-              Create an account
-            </a>
+            {!isLoggedIn ?
+              (<>
+                <a href="/login" login={login} user={user} className="py-2 px-3 border rounded-md  hover:bg-gray-100 border-gray-700">
+                  Login
+                </a>
+                <a
+                  href="/signup"
+                  className="bg-purple-400 py-2 px-3 rounded-md transition-colors duration-300 hover:bg-purple-500 border border-black"
+                >
+                  Create an account
+                </a>
+              </>) : (<><a href="/logout" className="py-2 px-3 border rounded-md  hover:bg-gray-100 border-gray-700">
+                Logout
+              </a>
+                <p
+                  className="bg-purple-400 py-2 px-3 rounded-md transition-colors duration-300 hover:bg-purple-500 border border-black"
+                >
+                  Welcome
+                </p>
+              </>)}
           </div>
 
           <div className="lg:hidden md:flex flex-col justify-end">
@@ -65,15 +76,26 @@ const Navbar = () => {
               ))}
             </ul>
             <div className="flex space-x-6">
-              <a href="/login" className="py-2 px-3 border rounded-md  hover:bg-gray-100 border-gray-700">
-                Login
-              </a>
-              <a
-                href="/signup"
-                className="bg-purple-400 py-2 px-3 rounded-md transition-colors duration-300 hover:bg-purple-500 border border-black"
-              >
-                Create an account
-              </a>
+              {!isLoggedIn ?
+                (<>
+                  <a href="/login" className="py-2 px-3 border rounded-md  hover:bg-gray-100 border-gray-700">
+                    Login
+                  </a>
+                  <a
+                    href="/signup"
+                    className="bg-purple-400 py-2 px-3 rounded-md transition-colors duration-300 hover:bg-purple-500 border border-black"
+                  >
+                    Create an account
+                  </a>
+                </>) : (<><a href="/logout" className="py-2 px-3 border rounded-md  hover:bg-gray-100 border-gray-700">
+                  Logout
+                </a>
+                  <p
+                    className="bg-purple-400 py-2 px-3 rounded-md transition-colors duration-300 hover:bg-purple-500 border border-black"
+                  >
+                    Welcome
+                  </p>
+                </>)}
             </div>
           </div>
         )}

@@ -2,10 +2,10 @@ import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
-const AboutUs = () => {
+const AboutUs = ({login, user}) => {
   return (
     <div className="min-h-screen bg-white-100">
-      <Navbar />
+      <Navbar login={login} user={user}/>
       <div className="max-w-7xl mx-auto pt-20 px-6">
         {/* About Us heading */}
         <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center mt-10 mb-10 tracking-wide">

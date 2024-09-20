@@ -40,7 +40,7 @@ const Card = ({ event }) => {
     );
 };
 
-const Categories = () => {
+const Categories = ({login, user}) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [events, setEvents] = useState([]);
@@ -74,7 +74,7 @@ const Categories = () => {
     return (
         <>
             {/* Navbar Component */}
-            <Navbar />
+            <Navbar login={login} user={user}/>
             <div className="mt-20 px-6">
                 {/* Page title */}
                 <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center mt-6 tracking-wide">

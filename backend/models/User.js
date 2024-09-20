@@ -17,11 +17,13 @@ const userSchema = new Schema({
     },
     eventsOrganised: {
         type: [Schema.Types.ObjectId],
-        ref: 'Events'
+        ref: 'Events',
+        default: []
     },
     eventsRegistered: {
         type: [Schema.Types.ObjectId],
-        ref: 'Events'
+        ref: 'Events',
+        default: []
     }
 });
 

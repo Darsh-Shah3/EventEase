@@ -8,7 +8,7 @@ import {
     TicketIcon,
 } from "@heroicons/react/24/outline";
 
-const RegisterEvent = () => {
+const RegisterEvent = ({ login, user }) => {
     const [ticketType, setTicketType] = useState("");
     const [numTickets, setNumTickets] = useState(1);
 
@@ -22,7 +22,7 @@ const RegisterEvent = () => {
 
     return (
         <>
-            <Navbar />
+            <Navbar login={login} user={user} />
             <div className="max-w-7xl mx-auto pt-3 px-6">
                 <div className="min-h-screen bg-gray-100 p-8">
                     <h2 className="text-3xl font-bold text-center mb-8">Register for Event</h2>
@@ -52,7 +52,7 @@ const RegisterEvent = () => {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div className="relative">
-                                <EnvelopeIcon className="w-6 h-6 absolute left-3 top-3 text-gray-400" />    
+                                <EnvelopeIcon className="w-6 h-6 absolute left-3 top-3 text-gray-400" />
                                 <input
                                     type="email"
                                     placeholder="Email"

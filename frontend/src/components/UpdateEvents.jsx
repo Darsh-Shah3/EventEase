@@ -6,9 +6,18 @@ import FlashMessage from "../constants/FlashMessage";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 
-const UpdateEvent = () => {
+const UpdateEvent = ({ login, user }) => {
     const loc = useLocation();
     const navigate = useNavigate();
+    const { isLoggedIn } = login;
+    const { currentUser } = user;
+
+    if (!isLoggedIn || !currentUser) {
+        setFlash({ message: 'You must be logged in to update an event!', type: 'error' });
+        setTimeout(() => {
+            navigate('/login')
+        }, 1200);
+    }
 
     // Check if details are available
     const details = loc.state || {};
@@ -34,11 +43,11 @@ const UpdateEvent = () => {
         } else {
             setFormData({ ...formData, [target.name]: value });
             console.log(target);
-            
-            
+
+
         }
         console.log(formData);
-        
+
     };
 
     const handleFreeCheckbox = () => {
@@ -89,7 +98,7 @@ const UpdateEvent = () => {
 
     return (
         <>
-            <Navbar />
+            <Navbar login={login} user={user} />
             {flash.message && (<FlashMessage
                 message={flash.message}
                 type={flash.type}
@@ -107,7 +116,7 @@ const UpdateEvent = () => {
                                     type="text"
                                     name="title"
                                     className="w-full pl-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                    placeholder ={title}
+                                    placeholder={title}
                                     onChange={(e) => onFormChange(e.target, e.target.value)}
                                 />
                             </div>

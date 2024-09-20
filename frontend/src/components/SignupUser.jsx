@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import FlashMessage from "../constants/FlashMessage";
+import { useNavigate } from "react-router-dom";
 
 const SignupUser = ({ login, user }) => {
     const { isLoggedIn, setIsLoggedIn } = login;
     const { currentUser, setCurrentUser } = user;
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -39,15 +41,17 @@ const SignupUser = ({ login, user }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(finalData),
             });
+            const result = await response.json();
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                setFlash({ message: result['message'], type: 'error' });
+                return;
             }
+        
 
-            const result = await response.json();
-            setIsLoggedIn(true);
-            setCurrentUser(JSON.parse(result)['user'])
-            setFlash({ message: 'Event updation successful!', type: 'success' });
+            await setIsLoggedIn(true);
+            await setCurrentUser(result['user'])
+            setFlash({ message: 'User signed up successfully!!', type: 'success' });
             setTimeout(() => navigate('/'), 1200);
         } catch (error) {
             console.error('Error:', error);

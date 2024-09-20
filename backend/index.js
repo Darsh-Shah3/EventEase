@@ -47,14 +47,39 @@ app.post('/events/update/:id', async (request, response) => {
     }
 });
 
-app.post('/user/signup', (request, response) => {
+app.post('/user/signup', async (request, response) => {
     const data = request.body;
     try {
-        const salt = bcrypt.genSalt(10);
-        const hashedPassword = bcrypt.hash(data.password, salt);
-        data.password = hashedPassword;
-    } catch (error) {
+        /* Checking for existing user */
+        const user = User.find({ email: data.email });
+        if (user) response.status(401).json({ message: 'User already exists! Please use different credentials' })
 
+        /* Continuing the hashing */
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(data.password, salt);
+        data.password = hashedPassword;
+
+        /* Adding to the database */
+        await User.insertMany([{ ...data }])
+            .then(data => response.status(200).json({ message: 'User insertion successful!', user: data[0] }))
+            .catch(error => response.status(401).json({ message: 'Bad request! Something went wrong!' }))
+
+    } catch (error) {
+        response.status(401).json({ message: 'Something went wrong! Please try again!' })
+    }
+});
+
+app.post('/user/login', async (request, response) => {
+    const data = request.body;
+    try {
+        const user = await User.find({ email: data.email });
+        if (!user) response.status(401).json({ message: 'User does not exists! Please use different credentials' });
+
+        const isSamePassword = await bcrypt.compare(data.password, user[0].password)
+        if (!isSamePassword) response.status(401).json({ message: 'Please use valid credentials' });
+        response.status(200).json({ message: 'User login successful!', user: user[0] })
+    } catch (error) {
+        response.status(401).json({ message: 'Something went wrong! Please try again!' })
     }
 })
 

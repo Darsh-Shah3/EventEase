@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { CalendarIcon, MapPinIcon, CurrencyDollarIcon, LinkIcon, PencilIcon, PhotoIcon, TagIcon } from "@heroicons/react/24/outline";
 import FlashMessage from "../constants/FlashMessage";
 import { useNavigate } from "react-router-dom";
 
-const CreateEvent = ({ isloggedin, isuser }) => {
+const CreateEvent = ({ login, user }) => {
     const [isFree, setIsFree] = useState(false);
     const [flash, setFlash] = useState({ message: '', type: '' })
     const navigate = useNavigate();
+    const { isLoggedIn } = login;
+    const { currentUser } = user;
     const [formData, setFormData] = useState({
         title: "",
         type: "",
@@ -20,6 +22,16 @@ const CreateEvent = ({ isloggedin, isuser }) => {
         price: "",
         url: ""
     });
+
+    useEffect(() => {
+        if (!isLoggedIn || !currentUser) {
+            setFlash({ message: 'You must be logged in to create an event!', type: 'error' });
+            setTimeout(() => {
+                navigate('/login');
+            }, 1200);
+        }
+    }, [isLoggedIn, currentUser, navigate]);
+
 
     const handleFreeCheckbox = () => {
         setIsFree(!isFree);
@@ -85,7 +97,7 @@ const CreateEvent = ({ isloggedin, isuser }) => {
 
     return (
         <>
-            <Navbar />
+            <Navbar login={login} user={user} />
             {flash.message && (<FlashMessage
                 message={flash.message}
                 type={flash.type}

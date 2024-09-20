@@ -13,7 +13,7 @@ const relatedEvents = [
   { id: 4, title: "AI Revolution 2024", image: e3, category: "AI" }
 ];
 
-const EventDetail = () => {
+const EventDetail = ({login, user}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -41,13 +41,13 @@ const EventDetail = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar login={login} user={user}/>
 
       <div className="min-h-screen bg-white-100 p-8">
         <div className="max-w-7xl mx-auto mt-20 mb-8 flex flex-col md:flex-row justify-evenly">
           {/* Event Image */}
           <div className="flex-none w-full md:w-1/2 mb-6 md:mb-0">
-            <img src={event.image} alt={event.title} className="w-full h-full object-cover rounded-lg" />
+            <img src={event.image} alt={event.title} className="w-full h-full object-contain rounded-lg" />
           </div>
 
           {/* Event Information */}
