@@ -8,7 +8,6 @@ const Navbar = ({ login, user }) => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const { isLoggedIn } = login;
   const { currentUser } = user;
-  console.log(currentUser, ' is ', isLoggedIn);
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);

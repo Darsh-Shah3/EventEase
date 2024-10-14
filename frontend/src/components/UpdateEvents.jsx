@@ -1,6 +1,6 @@
 import { CurrencyDollarIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import { CalendarIcon, LinkIcon, MapPinIcon, PencilIcon, TagIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlashMessage from "../constants/FlashMessage";
 import Footer from "./Footer";
@@ -11,15 +11,17 @@ const UpdateEvent = ({ login, user }) => {
     const navigate = useNavigate();
     const { isLoggedIn } = login;
     const { currentUser } = user;
+    const [flash, setFlash] = useState({ message: '', type: '' });
 
-    if (!isLoggedIn || !currentUser) {
-        setFlash({ message: 'You must be logged in to update an event!', type: 'error' });
-        setTimeout(() => {
-            navigate('/login')
-        }, 1200);
-    }
+    useEffect(() => {
+        if (!isLoggedIn || !currentUser) {
+            setFlash({ message: 'You must be logged in to update an event!', type: 'error' });
+            setTimeout(() => {
+                navigate('/login');
+            }, 1200);
+        }
+    }, [isLoggedIn, currentUser, navigate]);
 
-    // Check if details are available
     const details = loc.state || {};
 
     // Destructure with fallback
@@ -27,7 +29,7 @@ const UpdateEvent = ({ login, user }) => {
     const initialData = { ...details };
     const [isFree, setIsFree] = useState(price === 'Free');
     const [formData, setFormData] = useState({ ...details });
-    const [flash, setFlash] = useState({ message: '', type: '' });
+
 
     // Handle input changes including file input
     const onFormChange = (target, value) => {
@@ -42,12 +44,7 @@ const UpdateEvent = ({ login, user }) => {
             }
         } else {
             setFormData({ ...formData, [target.name]: value });
-            console.log(target);
-
-
         }
-        console.log(formData);
-
     };
 
     const handleFreeCheckbox = () => {
@@ -65,7 +62,7 @@ const UpdateEvent = ({ login, user }) => {
 
             const hasEmptyValues = Object.entries(formData).some(
                 ([key, value]) => {
-                    key !== 'image' && (!value || value === ""); console.log(key, value);
+                    key !== 'image' && (!value || value === "");
                 }
             );
 

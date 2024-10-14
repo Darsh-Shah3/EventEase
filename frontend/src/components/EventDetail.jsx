@@ -13,14 +13,15 @@ const relatedEvents = [
   { id: 4, title: "AI Revolution 2024", image: e3, category: "AI" }
 ];
 
-const EventDetail = ({login, user}) => {
+const EventDetail = ({ login, user }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const event = location.state;
+  const { currentUser } = user;
 
-  const handleRegisterClick = () => {
-    navigate("/registerEvent");
+  const handleRegisterClick = (eventId) => {
+    navigate(`/registerEvent/${eventId}`);
   };
 
   const handleEventClick = (eventId) => {
@@ -41,7 +42,7 @@ const EventDetail = ({login, user}) => {
 
   return (
     <>
-      <Navbar login={login} user={user}/>
+      <Navbar login={login} user={user} />
 
       <div className="min-h-screen bg-white-100 p-8">
         <div className="max-w-7xl mx-auto mt-20 mb-8 flex flex-col md:flex-row justify-evenly">
@@ -60,28 +61,30 @@ const EventDetail = ({login, user}) => {
             <p className="text-lg font-medium mb-6">{event.description}</p>
 
             <div className="flex flex-col gap-4">
-              <div className="flex gap-4">
-                <button
-                  onClick={handleUpdateClick}
-                  className="flex-1 flex items-center justify-center bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
-                >
-                  <PencilIcon className="h-5 w-5 mr-2" />
-                  Update
-                </button>
-                <button
-                  onClick={handleDeleteClick}
-                  className="flex-1 flex items-center justify-center bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition duration-200"
-                >
-                  <TrashIcon className="h-5 w-5 mr-2" />
-                  Delete
-                </button>
-              </div>
-              <button
-                onClick={handleRegisterClick}
-                className="w-full bg-purple-500 text-white py-3 px-6 rounded-lg hover:bg-purple-600 transition duration-200"
-              >
-                Register for Event
-              </button>
+              {currentUser && event.organiser === currentUser._id ?
+                (<div className="flex gap-4">
+                  <button
+                    onClick={handleUpdateClick}
+                    className="flex-1 flex items-center justify-center bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
+                  >
+                    <PencilIcon className="h-5 w-5 mr-2" />
+                    Update
+                  </button>
+                  {/* <button
+                    onClick={handleDeleteClick}
+                    className="flex-1 flex items-center justify-center bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition duration-200"
+                  >
+                    <TrashIcon className="h-5 w-5 mr-2" />
+                    Delete
+                  </button> */}
+                </div>) : (
+                  <button
+                    onClick={() => handleRegisterClick(event._id)}
+                    className="w-full bg-purple-500 text-white py-3 px-6 rounded-lg hover:bg-purple-600 transition duration-200"
+                  >
+                    Register for Event
+                  </button>)
+              }
             </div>
           </div>
         </div>
@@ -96,7 +99,6 @@ const EventDetail = ({login, user}) => {
               <div
                 key={relatedEvent.id}
                 className="border rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105"
-                onClick={() => handleEventClick(relatedEvent.id)}
               >
                 <img
                   src={relatedEvent.image}

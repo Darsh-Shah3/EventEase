@@ -52,7 +52,7 @@ const AllEvents = () => {
         const data = await response.json();
         setEvents(data.events);
       } catch (error) {
-        console.log('Error fetching meals : ', error);
+        console.log('Error fetching events : ', error);
       }
     };
     fetchEvents();

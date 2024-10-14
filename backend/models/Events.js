@@ -37,6 +37,10 @@ const eventSchema = new Schema({
     url: {
         type: String,
         required: true
+    },
+    organiser: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 })
 

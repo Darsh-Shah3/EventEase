@@ -10,6 +10,7 @@ import SignupUser from "./components/SignupUser.jsx";
 import UpdateEvent from "./components/UpdateEvents.jsx";
 import { useEffect, useState } from "react";
 import Logout from "./components/Logout.jsx";
+import Profile from './components/Profile.jsx';
 
 const App = () => {
   // Fetch the login state and user from localStorage if they exist
@@ -17,6 +18,7 @@ const App = () => {
     const loggedIn = localStorage.getItem("isLoggedIn");
     return loggedIn ? JSON.parse(loggedIn) : false;
   });
+
   const [currentUser, setCurrentUser] = useState(() => {
     const user = localStorage.getItem("currentUser");
     return user ? JSON.parse(user) : {};
@@ -40,18 +42,19 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home login={login} user={user} />}></Route>
-        <Route path="/aboutUs" element={<AboutUs login={login} user={user}/>}></Route>
+        <Route path="/aboutUs" element={<AboutUs login={login} user={user} />}></Route>
         <Route path="/login" element={<Login login={login} user={user} />}></Route>
         <Route path="/logout" element={<Logout login={login} user={user} />}></Route>
         <Route path="/signup" element={<SignupUser login={login} user={user} />}></Route>
         <Route path="/createEvent" element={<CreateEvent login={login} user={user} />}></Route >
         <Route path="/updateEvent" element={<UpdateEvent login={login} user={user} />}></Route>
-        <Route path="/registerEvent" element={<RegisterEvent login={login} user={user} />}></Route >
-        <Route path="/categories" element={<Categories login={login} user={user}/>}></Route >
+        <Route path="/registerEvent/:id" element={<RegisterEvent login={login} user={user} />}></Route >
+        <Route path="/categories" element={<Categories login={login} user={user} />}></Route >
         <Route path="/events/:id" element={<EventDetail login={login} user={user} />} />
+        <Route path="/profile" element={<Profile login={login} user={user} />}></Route >
         {/* <Route path="/event" element={< />}></Route > 
         {/* <Route path="/payment" element={< />}></Route > 
-        {/* <Route path="/myprofile" element={< />}></Route >
+        {/* 
         */}
       </Routes>
     </BrowserRouter>

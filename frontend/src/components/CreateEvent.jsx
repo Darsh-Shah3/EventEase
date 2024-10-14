@@ -10,7 +10,7 @@ const CreateEvent = ({ login, user }) => {
     const [flash, setFlash] = useState({ message: '', type: '' })
     const navigate = useNavigate();
     const { isLoggedIn } = login;
-    const { currentUser } = user;
+    const { currentUser, setCurrentUser } = user;
     const [formData, setFormData] = useState({
         title: "",
         type: "",
@@ -51,24 +51,23 @@ const CreateEvent = ({ login, user }) => {
         } else {
             setFormData({ ...formData, [target.name]: value });
         }
-        console.log(formData);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // If isFree is checked, set price to 'Free'
         const finalData = {
             ...formData,
             price: isFree ? "Free" : formData.price,
+            ['organiser']: currentUser._id
         };
-
-        console.log(finalData['title'], finalData['url']);
 
         if (Object.values(finalData).includes('')) {
             setFlash({ message: 'Fields cannot be empty', type: 'error' });
             return;
         }
+
+        console.log(finalData);
 
         try {
             const response = await fetch('http://localhost:5000/events', {
@@ -84,6 +83,20 @@ const CreateEvent = ({ login, user }) => {
                 setFlash({ message: 'Something went wrong', type: 'error' });
                 return;
             }
+            const event = result['event'][0];
+            console.log(result);
+            console.log(event);
+            
+            
+            const userResponse = await fetch(`http://localhost:5000/user/organise/${event._id}/${currentUser._id}`)
+
+            if (!userResponse.ok) {
+                setFlash({ message: 'Something went wrong', type: 'error' });
+                return;
+            }
+
+            const userResult = await userResponse.json();
+            setCurrentUser(userResult['user'])
             setFlash({ message: 'Event creation successful!', type: 'success' });
             setTimeout(() => {
                 navigate('/')

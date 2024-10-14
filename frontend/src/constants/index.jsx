@@ -17,7 +17,7 @@ export const navItems = [
   { label: "Categories", href: "/categories" },
   { label: "Create Event", href: "/createEvent" },
   { label: "About Us", href: "/aboutUs" },
-  { label: "My Profile", href: "/myprofile" },
+  { label: "My Profile", href: "/profile" },
 ];
 
 export const testimonials = [
@@ -37,13 +37,13 @@ export const testimonials = [
     user: "David Johnson",
     company: "Quantum Innovations",
     image: user3,
-    text: "Working with this company was a pleasure. Their attention to detail and commitment to excellence are commendable. I would highly recommend them to anyone looking for top-notch service.",
+    text: "Working with this company was a pleasure. Their attention to detail and commitment to excellence are commendable. ",
   },
   {
     user: "Ronee Brown",
     company: "Fusion Dynamics",
     image: user4,
-    text: "Working with the team at XYZ Company was a game-changer for our project. Their attention to detail and innovative solutions helped us achieve our goals faster than we thought possible. We are grateful for their expertise and professionalism!",
+    text: "Working with the team at XYZ Company was a game-changer for our project. Their attention to detail and innovative solutions helped us achieve our goals faster.",
   },
   {
     user: "Michael Wilson",
